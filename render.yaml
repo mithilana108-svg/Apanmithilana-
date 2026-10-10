@@ -1,0 +1,55 @@
+# Test deployment. Connect this repository as a Render Blueprint.
+services:
+  - type: web
+    name: mithilana-test
+    runtime: node
+    plan: free
+    buildCommand: mkdir -p app && tar -xzf website.tar.gz -C app && cd app && npm ci
+    startCommand: cd app && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_MODE
+        value: test
+      - key: LIVE_ORDERS_ENABLED
+        value: "false"
+      - key: DB_SSL
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mithilana-test-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+      - key: ADMIN_BOOTSTRAP_EMAIL
+        sync: false
+      - key: ADMIN_BOOTSTRAP_PASSWORD
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: META_ACCESS_TOKEN
+        sync: false
+      - key: META_PHONE_NUMBER_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: WHATSAPP_OTP_TEMPLATE
+        value: authentication_code_copy_code_button
+      - key: WHATSAPP_TEMPLATE_LANGUAGE
+        value: en_US
+      - key: WHATSAPP_ORDER_STATUS_TEMPLATE
+        sync: false
+databases:
+  - name: mithilana-test-db
+    plan: free
