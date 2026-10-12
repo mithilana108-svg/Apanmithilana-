@@ -5,7 +5,7 @@ services:
     name: apanmithilana
     runtime: node
     plan: free
-    buildCommand: mkdir -p app && tar -xzf website.tar.gz -C app && cd app && npm ci
+    buildCommand: mkdir -p app && tar --no-same-owner -xzf website.tar.gz -C app && cd app && npm ci
     startCommand: cd app && npm start
     healthCheckPath: /api/health
     envVars:
@@ -25,6 +25,12 @@ services:
         fromDatabase:
           name: apanmithilana-db
           property: connectionString
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_JWT_SECRET
